@@ -1,0 +1,75 @@
+//The idea is to digitlize a large group of cells in a petri dish. 
+//Cells move randomly, they will eat, gainweight, age, connect,die 
+//and give birth to new cells. 
+//If cells approaches each other, they will be marked into different color.
+//When cells are creating a new society with eachother with a highlighted line.
+int num=500;//Setting numbers of the cells
+Cell[] cells = new Cell[num];
+void setup()
+{
+  fullScreen();
+  for(int i=0;i<num;i++)//Initial
+  {
+    cells[i]=new Cell(random(0,width),random(0,height),random(0,10));//Brownian motion
+  }
+}
+void draw()//Creating cell's society
+{
+  background(0);
+    for(int i=0;i<num;i++)
+  {
+  cells[i].update();
+  cells[i].display();
+  }
+    for(int i=0;i<num;i++)//Highlighting connected cells.
+  {
+    for(int j=i+1;j<num;j++)//Marking targets for connecting.
+    {
+      if(dist(cells[i].x,cells[i].y,cells[j].x,cells[j].y)<=50)
+    {
+      stroke(0,255,0);
+      strokeWeight(5-dist(cells[i].x,cells[i].y,cells[j].x,cells[j].y)*0.1);
+      line(cells[i].x,cells[i].y,cells[j].x,cells[j].y);
+    }
+      if(dist(cells[i].x,cells[i].y,cells[j].x,cells[j].y)<=10)
+      {
+      cells[i].r+=0.1;//Cells will grow as they approach each other
+      }
+      if(cells[i].r>40)//Cells will die when they grow up to 40
+      {
+      cells[i]=new Cell(random(0,width),random(0,height),random(0,20));//As a cell die, a new cell will be given birth at random place
+      }
+      if(dist(cells[i].x,cells[i].y,cells[j].x,cells[j].y)<=30)
+      {
+      cells[i].markConnection();
+      }
+    }
+  }
+}
+class Cell
+{
+  float x,y,r;//Cell's setting
+  Cell(float x,float y,float r)
+  {
+    this.x=x;
+    this.y=y;
+    this.r=r;
+  }
+  void update()
+  {
+   x+=random(-2,2); 
+   y+=random(-2,2);    
+   r+=random(-0.5,0.5); 
+  }
+  void display()
+  {
+    noStroke();
+    fill(255,0,0);
+   ellipse(x,y,r,r);
+  }
+  void markConnection()
+  {
+  fill(0,255,0);
+  ellipse(x,y,r,r);
+  }
+}
