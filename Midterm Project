@@ -1,0 +1,88 @@
+int num=5;
+int yourScore=0;
+Target[] targets=new Target[num];
+void setup()
+{
+  fullScreen();
+  for(int i=0;i<num;i++)
+  {
+    targets[i]=new Target(random(0,width),random(0,height),(1));
+  }
+}
+void draw()
+{
+  background(122);
+  textSize(30);
+  text("WELCOME TO THE SOOTING RANGE",40,40);
+  fill(0,0,0);
+  text("Your Score:"+yourScore,40,65);
+  fill(0,0,0);
+  
+  for(int i=0;i<num;i++)
+  {
+    targets[i].movingTarget();
+    targets[i].display1();
+    if(targets[i].r>60)
+    {
+      targets[i].display2();
+    }
+    if(targets[i].r>65)
+    {
+      targets[i].fail();
+      targets[i]=new Target(random(0,width),random(0,height),(1));
+    }
+    
+  }
+}
+void mouseClicked()
+{
+  for(int i=0;i<num;i++)
+  {
+    if(dist(targets[i].x,targets[i].y,mouseX,mouseY)<targets[i].r)
+    {
+      targets[i]=new Target(random(0,width),random(0,height),(1));
+      yourScore+=1;
+    }
+  }
+}
+class Target
+{
+  float x,y,r;
+  boolean fail = false;
+  
+  Target(float x,float y,float r)
+  {
+    this.x=x;
+    this.y=y;
+    this.r=r;
+  }
+  void movingTarget()
+  {
+    x+=random(-2,2);
+    y+=random(-2,2);
+    r+=0.1;
+  }
+  void display1()
+  {
+    fill(0,255,0);
+    ellipse(x,y,r,r);
+    fill(255);
+    ellipse(x,y,0.7*r,0.7*r);
+  }
+  void display2()
+  {
+    fill(255,0,0);
+    ellipse(x,y,r,r);
+  }
+  void fail()
+  {
+    ellipse(x,y,0,0);
+  }
+  boolean check()
+  {
+    if (r>65||fail)
+    {return true;}
+    return false;
+  }
+  
+}
